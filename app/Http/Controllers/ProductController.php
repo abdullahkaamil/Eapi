@@ -65,7 +65,7 @@ class ProductController extends Controller
         return response([
             'data' => new ProductResource($product)
         ],Response::HTTP_CREATED);
-        
+
     }
 
     // /**
@@ -74,8 +74,9 @@ class ProductController extends Controller
     //  * @param  \App\Model\Product  $product
     //  * @return \Illuminate\Http\Response
     //  */
-    // public function destroy(Product $product)
-    // {
-    //     //
-    // }
+    public function destroy(Product $product)
+    {
+     $product->delete();
+     return response(null,Response::HTTP_NO_CONTENT);
+    }
 }
