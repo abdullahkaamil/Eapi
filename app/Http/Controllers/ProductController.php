@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Model\Product;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
 
 class ProductController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index','show');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,44 +26,32 @@ class ProductController extends Controller
         return  ProductCollection::collection(Product::paginate(15));
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     //
-    // }
+    public function create()
+    {
+        //
+    }
 
-   // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  \App\Model\Product  $product
-    //  * @return \Illuminate\Http\Response
-    //  */
+    public function store(ProductRequest $request)
+    {
+        $product = new Product;
+        $product->name = $request->name;
+        $product->detail = $request->description;
+        $product->stock = $request->stock;
+        $product->price = $request->price;
+        $product->discount =$request->discount;
+        $product->save();
+
+        return response([
+            'data' => new ProductResource($product)
+        ],Response::HTTP_CREATED);
+    }
+
     public function show(Product $product)
     {
         return new ProductResource($product);
     }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  \App\Model\Product  $product
-    //  * @return \Illuminate\Http\Response
-    //  */
     // public function edit(Product $product)
     // {
     //     //
